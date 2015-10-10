@@ -10,7 +10,9 @@ Quick Examples
 
 To build this new URI:
 
+```
 ftp://user:password@example.com:888/path/to/file?param1=val1&param2=val2#fragment
+```
 
 Write:
 
@@ -29,6 +31,10 @@ var uri = FluentUriBuilder.Create()
     .ToUri();
 ```
 
+Query parameters can also be specified using an `IDictionary<TKey, TValue>` or one by one,
+by calling `.QueryParam("key", "value")` repeatedly. The latter can be used to specify more
+query parameters with the same name.
+
 To modify an existing URI:
 
 ```csharp
@@ -42,4 +48,7 @@ var uri = FluentUriBuilder.From("http://example.com/somepath?foo=bar#baz")
 
 The result is:
 
+```
 http://example.com:8080/otherpath
+```
+
