@@ -9,8 +9,9 @@ namespace FluentUriBuilder
         private string host;
         private string path;
         private string scheme;
-        private UriCredentials credentials;
+        private bool removePort;
         private int? port;
+        private UriCredentials credentials;
 
         private class UriCredentials
         {
@@ -56,6 +57,20 @@ namespace FluentUriBuilder
             fragment.ThrowIfNull(nameof(fragment));
 
             this.fragment = fragment;
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Removes the fragment part of the URI.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        public FluentUriBuilder RemoveFragment()
+        {
+            // `string.Empty` indicates that the fragment has been updated but it is empty.
+            fragment = string.Empty;
 
             return this;
         }
@@ -108,6 +123,19 @@ namespace FluentUriBuilder
         }
 
         /// <summary>
+        ///     Removes the user name and password from the URI.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        public FluentUriBuilder RemoveCredentials()
+        {
+            credentials = new UriCredentials(string.Empty, string.Empty);
+
+            return this;
+        }
+
+        /// <summary>
         ///     Sets or updates the local path in the URI.
         /// </summary>
         /// <param name="path">
@@ -125,6 +153,32 @@ namespace FluentUriBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Removes the local path from the URI.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        public FluentUriBuilder RemovePath()
+        {
+            this.path = string.Empty;
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Sets or updates the port number in the URI.
+        /// </summary>
+        /// <param name="port">
+        ///     An integer between -1 and 65535, inclusive. -1 indicates that the default
+        ///     port number for the protocol is to be used.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     If <see cref="port"/> is less than -1 or greater than 65535.
+        /// </exception>
         public FluentUriBuilder Port(int port)
         {
             port.ThrowIfNotInRange(-1, 65535, nameof(port));
@@ -134,6 +188,41 @@ namespace FluentUriBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Updates the URI to use the default port for the protocol.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        public FluentUriBuilder DefaultPort()
+        {
+            port = -1;
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Removes the port number from the URI.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        public FluentUriBuilder RemovePort()
+        {
+            removePort = true;
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Sets or updates the protocol scheme of the URI.
+        /// </summary>
+        /// <param name="scheme">
+        ///     The new value of the protocol scheme.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
         public FluentUriBuilder Scheme(UriScheme scheme)
         {
             switch (scheme)
@@ -180,11 +269,17 @@ namespace FluentUriBuilder
                 ? new UriBuilder()
                 : new UriBuilder(baseUri);
 
+            // By convention, if these private fields are null, they haven't been updated so
+            // we have to leave the corresponding `UriBuilder` property alone.
             if (fragment != null) uriBuilder.Fragment = fragment;
             if (host != null) uriBuilder.Host = host;
             if (path != null) uriBuilder.Path = path;
-            if (port != null) uriBuilder.Port = port.Value;
             if (scheme != null) uriBuilder.Scheme = scheme;
+
+            // Removing the port means setting the default port for the protocol, which
+            // can be specified by passing -1 to UriBuilder.
+            if (port != null) uriBuilder.Port = port.Value;
+            else if (removePort) uriBuilder.Port = -1;
 
             if (credentials != null)
             {

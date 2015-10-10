@@ -73,6 +73,16 @@ namespace FluentUriBuilder.Test
                 .Should().Be(string.Empty);
         }
 
+        [Fact]
+        public void ExistingFragmentIsDeletedIfRemoveFragmentIsCalled()
+        {
+            FluentUriBuilder.From(fullTestUri)
+                .RemoveFragment()
+                .ToUri()
+                .Fragment
+                .Should().Be(string.Empty);
+        }
+
         #endregion
 
         #region Host
@@ -158,6 +168,16 @@ namespace FluentUriBuilder.Test
                 .Should().Be(expectedUserInfo);
         }
 
+        [Fact]
+        public void ExistingCredentialsAreDeletedIfRemoveCredentialsIsCalled()
+        {
+            FluentUriBuilder.From(fullTestUri)
+                .RemoveCredentials()
+                .ToUri()
+                .UserInfo
+                .Should().Be(string.Empty);
+        }
+
         #endregion
 
         #region Path
@@ -198,6 +218,16 @@ namespace FluentUriBuilder.Test
         {
             FluentUriBuilder.From(fullTestUri)
                 .Path(string.Empty)
+                .ToUri()
+                .LocalPath
+                .Should().Be("/");
+        }
+
+        [Fact]
+        public void ExistingPathIsDeletedIfRemovePathCalled()
+        {
+            FluentUriBuilder.From(fullTestUri)
+                .RemovePath()
                 .ToUri()
                 .LocalPath
                 .Should().Be("/");
@@ -257,13 +287,33 @@ namespace FluentUriBuilder.Test
         }
 
         [Fact]
-        public void ExistingPortIsDeletedIfProtocolDefaultPortSpecified()
+        public void ProtocolDefaultPortIsUsedIfPortIsMinus1()
         {
             FluentUriBuilder.From(fullTestUri)
                 .Port(-1)
                 .ToUri()
                 .Port
                 .Should().Be(80);
+        }
+
+        [Fact]
+        public void ExistingPortIsDeletedIfProtocolDefaultPortSpecified()
+        {
+            FluentUriBuilder.From("ftp://example.com:9999")
+                .DefaultPort()
+                .ToUri()
+                .Port
+                .Should().Be(21);
+        }
+
+        [Fact]
+        public void ExistingPortIsDeletedIfRemovePortCalled()
+        {
+            FluentUriBuilder.From("ftp://example.com:9999")
+                .RemovePort()
+                .ToUri()
+                .Port
+                .Should().Be(21);
         }
 
         #endregion
