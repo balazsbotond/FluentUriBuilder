@@ -7,6 +7,20 @@ namespace FluentUriBuilder
         private string baseUri;
         private string fragment;
         private string host;
+        private string password;
+        private Credentials credentials;
+
+        private class Credentials
+        {
+            public Credentials(string user, string password)
+            {
+                User = user;
+                Password = password;
+            }
+
+            public string User { get; set; }
+            public string Password { get; set; }
+        }
 
         internal FluentUriBuilder(string baseUri)
         {
@@ -57,6 +71,31 @@ namespace FluentUriBuilder
         }
 
         /// <summary>
+        ///     Sets or updates the user credentials (user name and password) in the URI.
+        /// </summary>
+        /// <param name="user">
+        ///     The new value of the user.
+        /// </param>
+        /// <param name="password">
+        ///     The new value of the password.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     If either of the arguments specified is <c>null</c>.
+        /// </exception>
+        public FluentUriBuilder WithCredentials(string user, string password)
+        {
+            user.ThrowIfNullOrWhiteSpace(nameof(user));
+            password.ThrowIfNullOrWhiteSpace(nameof(password));
+
+            credentials = new Credentials(user, password);
+
+            return this;
+        }
+
+        /// <summary>
         ///     Creates a new <see cref="Uri"/> instance from the values specified.
         /// </summary>
         /// <returns>
@@ -72,6 +111,12 @@ namespace FluentUriBuilder
 
             if (fragment != null) uriBuilder.Fragment = fragment;
             if (host != null) uriBuilder.Host = host;
+
+            if (credentials != null)
+            {
+                uriBuilder.UserName = credentials.User;
+                uriBuilder.Password = credentials.Password;
+            }
 
             return uriBuilder.Uri;
         }

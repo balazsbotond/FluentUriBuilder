@@ -8,6 +8,8 @@ namespace FluentUriBuilder.Test
     {
         private static readonly string fullTestUri = "http://user:password@example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
 
+        #region General
+
         [Fact]
         public void FromReturnsFluentUriBuilderInstance()
         {
@@ -26,8 +28,12 @@ namespace FluentUriBuilder.Test
             BuildUri.From(fullTestUri).ToUri().AbsoluteUri.Should().Be(fullTestUri);
         }
 
+        #endregion
+
+        #region Fragment
+
         [Fact]
-        public void WithFragmentDoesNotAcceptNull()
+        public void FragmentCannotBeNull()
         {
             BuildUri.Create().Invoking(b => b.WithFragment(null)).ShouldThrow<ArgumentNullException>();
         }
@@ -67,8 +73,12 @@ namespace FluentUriBuilder.Test
                 .Should().Be(string.Empty);
         }
 
+        #endregion
+
+        #region Host
+
         [Fact]
-        public void WithHostDoesNotAcceptNullOrWhiteSpace()
+        public void HostCannotBeNullOrWhiteSpace()
         {
             BuildUri.Create().Invoking(b => b.WithHost(null)).ShouldThrow<ArgumentException>();
             BuildUri.Create().Invoking(b => b.WithHost(string.Empty)).ShouldThrow<ArgumentException>();
@@ -98,5 +108,66 @@ namespace FluentUriBuilder.Test
                 .Host
                 .Should().Be(host);
         }
-   } 
+
+        #endregion
+
+        #region Password
+
+        [Fact]
+        public void UserNamenCannotBeNullOrWhiteSpace()
+        {
+            BuildUri.Create().Invoking(b => b.WithCredentials(null, "password")).ShouldThrow<ArgumentException>();
+            BuildUri.Create().Invoking(b => b.WithCredentials(string.Empty, "password")).ShouldThrow<ArgumentException>();
+            BuildUri.Create().Invoking(b => b.WithCredentials(" ", "password")).ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
+        public void PasswordCannotBeNullOrWhiteSpace()
+        {
+            BuildUri.Create().Invoking(b => b.WithCredentials("user", null)).ShouldThrow<ArgumentException>();
+            BuildUri.Create().Invoking(b => b.WithCredentials(string.Empty, "user")).ShouldThrow<ArgumentException>();
+            BuildUri.Create().Invoking(b => b.WithCredentials(" ", "user")).ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
+        public void CredentialsAreUsedIfSpecified()
+        {
+            var user = "user";
+            var password = "password";
+            var expectedUserInfo = "user:password";
+            var exampleUriWithoutCredentials = "http://example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
+
+            BuildUri.From(exampleUriWithoutCredentials)
+                .WithCredentials(user, password)
+                .ToUri()
+                .UserInfo
+                .Should().Be(expectedUserInfo);
+        }
+
+        [Fact]
+        public void ExistingCredentialsAreUpdated()
+        {
+            var user = "new-user";
+            var password = "new-password";
+            var expectedUserInfo = "new-user:new-password";
+
+            BuildUri.From(fullTestUri)
+                .WithCredentials(user, password)
+                .ToUri()
+                .UserInfo
+                .Should().Be(expectedUserInfo);
+        }
+
+        //[Fact]
+        //public void ExistingPasswordIsDeletedIfEmptyPasswordSpecified()
+        //{
+        //    BuildUri.From(fullTestUri)
+        //        .WithUserInfo(string.Empty)
+        //        .ToUri()
+        //        .UserInfo
+        //        .Should().Be("user");
+        //}
+
+        #endregion
+    }
 }
