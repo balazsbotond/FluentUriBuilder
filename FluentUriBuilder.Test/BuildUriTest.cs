@@ -1,12 +1,13 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
-using FluentUriBuilder;
+using System;
 
 namespace FluentUriBuilder.Test
 {
     public class BuildUriTest
     {
+        private static readonly string fullTestUri = "http://user:password@example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
+
         [Fact]
         public void FromReturnsFluentUriBuilderInstance()
         {
@@ -14,10 +15,15 @@ namespace FluentUriBuilder.Test
         }
 
         [Fact]
+        public void CreateReturnsFluentUriBuilderInstance()
+        {
+            BuildUri.Create().Should().NotBeNull();
+        }
+
+        [Fact]
         public void ToUriReturnsUriInstanceInitializedWithTheBaseUri()
         {
-            var exampleUri = "http://user:password@example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
-            BuildUri.From(exampleUri).ToUri().Should().Be(exampleUri);
+            BuildUri.From(fullTestUri).ToUri().Should().Be(fullTestUri);
         }
 
         [Fact]
@@ -37,13 +43,50 @@ namespace FluentUriBuilder.Test
         public void ExistingFragmentIsUpdated()
         {
             var fragment = "test";
-            var exampleUriWithFragment = "http://user:password@example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
 
-            BuildUri.From(exampleUriWithFragment)
+            BuildUri.From(fullTestUri)
                 .WithFragment(fragment)
                 .ToUri()
                 .Fragment
                 .Should().Be("#" + fragment);
+        }
+
+        [Fact]
+        public void WithHostDoesNotAcceptNullOrWhiteSpace()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                BuildUri.Create().WithHost(null)
+            );
+            Assert.Throws<ArgumentException>(() =>
+                BuildUri.Create().WithHost(string.Empty)
+            );
+            Assert.Throws<ArgumentException>(() =>
+                BuildUri.Create().WithHost(" ")
+            );
+        }
+
+        [Fact]
+        public void HostIsUsedIfSpecified()
+        {
+            var host = "test.example.com";
+
+            BuildUri.Create()
+                .WithHost(host)
+                .ToUri()
+                .Host
+                .Should().Be(host);
+        }
+
+        [Fact]
+        public void ExistingHostIsUpdated()
+        {
+            var host = "subdomain.domain.hu";
+
+            BuildUri.From(fullTestUri)
+                .WithHost(host)
+                .ToUri()
+                .Host
+                .Should().Be(host);
         }
    } 
 }
