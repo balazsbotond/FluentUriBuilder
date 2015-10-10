@@ -14,5 +14,10 @@ namespace FluentUriBuilder
         {
             this.baseUri = baseUri;
         }
+
+        public Uri ToUri()
+        {
+            return new Uri(this.baseUri);
+        }
     }
 }
