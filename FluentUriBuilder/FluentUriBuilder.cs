@@ -24,6 +24,16 @@ namespace FluentUriBuilder
             public string Password { get; set; }
         }
 
+        public static FluentUriBuilder From(string baseUri)
+        {
+            return new FluentUriBuilder(baseUri);
+        }
+
+        public static FluentUriBuilder Create()
+        {
+            return new FluentUriBuilder(string.Empty);
+        }
+
         internal FluentUriBuilder(string baseUri)
         {
             this.baseUri = baseUri;

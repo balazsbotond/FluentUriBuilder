@@ -4,7 +4,7 @@ using System;
 
 namespace FluentUriBuilder.Test
 {
-    public class BuildUriTest
+    public class FluentUriBuilderTest
     {
         private static readonly string fullTestUri = "http://user:password@example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
 
@@ -13,19 +13,19 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void FromReturnsFluentUriBuilderInstance()
         {
-            BuildUri.From(string.Empty).Should().NotBeNull();
+            FluentUriBuilder.From(string.Empty).Should().NotBeNull();
         }
 
         [Fact]
         public void CreateReturnsFluentUriBuilderInstance()
         {
-            BuildUri.Create().Should().NotBeNull();
+            FluentUriBuilder.Create().Should().NotBeNull();
         }
 
         [Fact]
         public void UrlPartsNotUpdatedArePreserved()
         {
-            BuildUri.From(fullTestUri).ToUri().AbsoluteUri.Should().Be(fullTestUri);
+            FluentUriBuilder.From(fullTestUri).ToUri().AbsoluteUri.Should().Be(fullTestUri);
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void FragmentCannotBeNull()
         {
-            BuildUri.Create().Invoking(b => b.WithFragment(null)).ShouldThrow<ArgumentNullException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithFragment(null)).ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace FluentUriBuilder.Test
             var fragment = "fragment";
             var exampleUriWithoutFragment = "http://user:password@example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue";
 
-            BuildUri.From(exampleUriWithoutFragment)
+            FluentUriBuilder.From(exampleUriWithoutFragment)
                 .WithFragment(fragment)
                 .ToUri()
                 .Fragment
@@ -56,7 +56,7 @@ namespace FluentUriBuilder.Test
         {
             var fragment = "test";
 
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithFragment(fragment)
                 .ToUri()
                 .Fragment
@@ -66,7 +66,7 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void ExistingFragmentIsDeletedIfEmptyFragmentSpecified()
         {
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithFragment(string.Empty)
                 .ToUri()
                 .Fragment
@@ -80,9 +80,9 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void HostCannotBeNullOrWhiteSpace()
         {
-            BuildUri.Create().Invoking(b => b.WithHost(null)).ShouldThrow<ArgumentException>();
-            BuildUri.Create().Invoking(b => b.WithHost(string.Empty)).ShouldThrow<ArgumentException>();
-            BuildUri.Create().Invoking(b => b.WithHost(" ")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithHost(null)).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithHost(string.Empty)).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithHost(" ")).ShouldThrow<ArgumentException>();
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace FluentUriBuilder.Test
         {
             var host = "test.example.com";
 
-            BuildUri.Create()
+            FluentUriBuilder.Create()
                 .WithHost(host)
                 .ToUri()
                 .Host
@@ -102,7 +102,7 @@ namespace FluentUriBuilder.Test
         {
             var host = "subdomain.domain.hu";
 
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithHost(host)
                 .ToUri()
                 .Host
@@ -116,17 +116,17 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void UserNamenCannotBeNullOrWhiteSpace()
         {
-            BuildUri.Create().Invoking(b => b.WithCredentials(null, "password")).ShouldThrow<ArgumentException>();
-            BuildUri.Create().Invoking(b => b.WithCredentials(string.Empty, "password")).ShouldThrow<ArgumentException>();
-            BuildUri.Create().Invoking(b => b.WithCredentials(" ", "password")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithCredentials(null, "password")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithCredentials(string.Empty, "password")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithCredentials(" ", "password")).ShouldThrow<ArgumentException>();
         }
 
         [Fact]
         public void PasswordCannotBeNullOrWhiteSpace()
         {
-            BuildUri.Create().Invoking(b => b.WithCredentials("user", null)).ShouldThrow<ArgumentException>();
-            BuildUri.Create().Invoking(b => b.WithCredentials(string.Empty, "user")).ShouldThrow<ArgumentException>();
-            BuildUri.Create().Invoking(b => b.WithCredentials(" ", "user")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithCredentials("user", null)).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithCredentials(string.Empty, "user")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithCredentials(" ", "user")).ShouldThrow<ArgumentException>();
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace FluentUriBuilder.Test
             var expectedUserInfo = "user:password";
             var exampleUriWithoutCredentials = "http://example.com:888/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
 
-            BuildUri.From(exampleUriWithoutCredentials)
+            FluentUriBuilder.From(exampleUriWithoutCredentials)
                 .WithCredentials(user, password)
                 .ToUri()
                 .UserInfo
@@ -151,7 +151,7 @@ namespace FluentUriBuilder.Test
             var password = "new-password";
             var expectedUserInfo = "new-user:new-password";
 
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithCredentials(user, password)
                 .ToUri()
                 .UserInfo
@@ -165,7 +165,7 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void PathCannotBeNull()
         {
-            BuildUri.Create().Invoking(b => b.WithPath(null)).ShouldThrow<ArgumentNullException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithPath(null)).ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace FluentUriBuilder.Test
             var path = "/just/a/path.extension";
             var exampleUriWithoutPath = "http://user:password@example.com:888?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
 
-            BuildUri.From(exampleUriWithoutPath)
+            FluentUriBuilder.From(exampleUriWithoutPath)
                 .WithPath(path)
                 .ToUri()
                 .LocalPath
@@ -186,7 +186,7 @@ namespace FluentUriBuilder.Test
         {
             var path = "/just/a/path.extension";
 
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithPath(path)
                 .ToUri()
                 .LocalPath
@@ -196,7 +196,7 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void ExistingPathIsDeletedIfEmptyFragmentSpecified()
         {
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithPath(string.Empty)
                 .ToUri()
                 .LocalPath
@@ -210,13 +210,13 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void PortCannotBeLessThanMinus1()
         {
-            BuildUri.Create().Invoking(b => b.WithPort(-2)).ShouldThrow<ArgumentOutOfRangeException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithPort(-2)).ShouldThrow<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void PortCannotBeGreaterThan65535()
         {
-            BuildUri.Create().Invoking(b => b.WithPort(65536)).ShouldThrow<ArgumentOutOfRangeException>();
+            FluentUriBuilder.Create().Invoking(b => b.WithPort(65536)).ShouldThrow<ArgumentOutOfRangeException>();
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace FluentUriBuilder.Test
             var port = 1337;
             var exampleUriWithoutPort = "http://user:password@example.com/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
 
-            BuildUri.From(exampleUriWithoutPort)
+            FluentUriBuilder.From(exampleUriWithoutPort)
                 .WithPort(port)
                 .ToUri()
                 .Port
@@ -237,7 +237,7 @@ namespace FluentUriBuilder.Test
         {
             var port = 1337;
 
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithPort(port)
                 .ToUri()
                 .Port
@@ -247,7 +247,7 @@ namespace FluentUriBuilder.Test
         [Fact]
         public void ExistingPortIsDeletedIfProtocolDefaultPortSpecified()
         {
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithPort(-1)
                 .ToUri()
                 .Port
@@ -268,7 +268,7 @@ namespace FluentUriBuilder.Test
         [InlineData(UriScheme.News, "news")]
         public void SchemeIsUsedIfSpecified(UriScheme scheme, string expectedScheme)
         {
-            BuildUri.Create()
+            FluentUriBuilder.Create()
                 .WithScheme(scheme)
                 .WithHost("example.com")
                 .ToUri()
@@ -285,7 +285,7 @@ namespace FluentUriBuilder.Test
         [InlineData(UriScheme.News, "news")]
         public void ExistingSchemeIsUpdated(UriScheme scheme, string expectedScheme)
         {
-            BuildUri.From(fullTestUri)
+            FluentUriBuilder.From(fullTestUri)
                 .WithScheme(scheme)
                 .ToUri()
                 .Scheme

@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildUri.cs" />
     <Compile Include="ArgumentValidationExtensions.cs" />
     <Compile Include="FluentUriBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
