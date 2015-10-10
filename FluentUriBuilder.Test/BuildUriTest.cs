@@ -21,9 +21,15 @@ namespace FluentUriBuilder.Test
         }
 
         [Fact]
-        public void ToUriReturnsUriInstanceInitializedWithTheBaseUri()
+        public void UrlPartsNotUpdatedArePreserved()
         {
-            BuildUri.From(fullTestUri).ToUri().Should().Be(fullTestUri);
+            BuildUri.From(fullTestUri).ToUri().AbsoluteUri.Should().Be(fullTestUri);
+        }
+
+        [Fact]
+        public void WithFragmentDoesNotAcceptNull()
+        {
+            BuildUri.Create().Invoking(b => b.WithFragment(null)).ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -52,17 +58,21 @@ namespace FluentUriBuilder.Test
         }
 
         [Fact]
+        public void ExistingFragmentIsDeletedIfEmptyFragmentSpecified()
+        {
+            BuildUri.From(fullTestUri)
+                .WithFragment(string.Empty)
+                .ToUri()
+                .Fragment
+                .Should().Be(string.Empty);
+        }
+
+        [Fact]
         public void WithHostDoesNotAcceptNullOrWhiteSpace()
         {
-            Assert.Throws<ArgumentException>(() =>
-                BuildUri.Create().WithHost(null)
-            );
-            Assert.Throws<ArgumentException>(() =>
-                BuildUri.Create().WithHost(string.Empty)
-            );
-            Assert.Throws<ArgumentException>(() =>
-                BuildUri.Create().WithHost(" ")
-            );
+            BuildUri.Create().Invoking(b => b.WithHost(null)).ShouldThrow<ArgumentException>();
+            BuildUri.Create().Invoking(b => b.WithHost(string.Empty)).ShouldThrow<ArgumentException>();
+            BuildUri.Create().Invoking(b => b.WithHost(" ")).ShouldThrow<ArgumentException>();
         }
 
         [Fact]
