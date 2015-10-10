@@ -75,7 +75,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="BuildUriTest.cs" />
+    <Compile Include="FluentUriBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

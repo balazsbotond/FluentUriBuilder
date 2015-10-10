@@ -9,12 +9,12 @@ namespace FluentUriBuilder
         private string host;
         private string path;
         private string scheme;
-        private Credentials credentials;
+        private UriCredentials credentials;
         private int? port;
 
-        private class Credentials
+        private class UriCredentials
         {
-            public Credentials(string user, string password)
+            public UriCredentials(string user, string password)
             {
                 User = user;
                 Password = password;
@@ -51,7 +51,7 @@ namespace FluentUriBuilder
         /// <exception cref="ArgumentNullException">
         ///     If the fragment specified is <c>null</c>.
         /// </exception>
-        public FluentUriBuilder WithFragment(string fragment)
+        public FluentUriBuilder Fragment(string fragment)
         {
             fragment.ThrowIfNull(nameof(fragment));
 
@@ -73,7 +73,7 @@ namespace FluentUriBuilder
         ///     If the hostname specified is a <c>null</c> or empty <see cref="string"/>,
         ///     or it only contains white space.
         /// </exception>
-        public FluentUriBuilder WithHost(string host)
+        public FluentUriBuilder Host(string host)
         {
             host.ThrowIfNullOrWhiteSpace(nameof(host));
 
@@ -97,12 +97,12 @@ namespace FluentUriBuilder
         /// <exception cref="ArgumentNullException">
         ///     If either of the arguments specified is <c>null</c>.
         /// </exception>
-        public FluentUriBuilder WithCredentials(string user, string password)
+        public FluentUriBuilder Credentials(string user, string password)
         {
             user.ThrowIfNullOrWhiteSpace(nameof(user));
             password.ThrowIfNullOrWhiteSpace(nameof(password));
 
-            credentials = new Credentials(user, password);
+            credentials = new UriCredentials(user, password);
 
             return this;
         }
@@ -116,7 +116,7 @@ namespace FluentUriBuilder
         /// <returns>
         ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
         /// </returns>
-        public FluentUriBuilder WithPath(string path)
+        public FluentUriBuilder Path(string path)
         {
             path.ThrowIfNull(nameof(path));
 
@@ -125,7 +125,7 @@ namespace FluentUriBuilder
             return this;
         }
 
-        public FluentUriBuilder WithPort(int port)
+        public FluentUriBuilder Port(int port)
         {
             port.ThrowIfNotInRange(-1, 65535, nameof(port));
 
@@ -134,7 +134,7 @@ namespace FluentUriBuilder
             return this;
         }
 
-        public FluentUriBuilder WithScheme(UriScheme scheme)
+        public FluentUriBuilder Scheme(UriScheme scheme)
         {
             switch (scheme)
             {
