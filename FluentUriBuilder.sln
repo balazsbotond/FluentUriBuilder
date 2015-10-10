@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentUriBuilder", "FluentUriBuilder\FluentUriBuilder.csproj", "{AD1F337D-052C-4E05-A525-4D0E6541E53C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentUriBuilder.Test", "FluentUriBuilder.Test\FluentUriBuilder.Test.csproj", "{94578615-C024-4736-A34B-7A8F45C29748}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD1F337D-052C-4E05-A525-4D0E6541E53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD1F337D-052C-4E05-A525-4D0E6541E53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD1F337D-052C-4E05-A525-4D0E6541E53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD1F337D-052C-4E05-A525-4D0E6541E53C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94578615-C024-4736-A34B-7A8F45C29748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94578615-C024-4736-A34B-7A8F45C29748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94578615-C024-4736-A34B-7A8F45C29748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94578615-C024-4736-A34B-7A8F45C29748}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
