@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildUri.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="ArgumentValidationExtensions.cs" />
     <Compile Include="FluentUriBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,6 +10,7 @@ namespace FluentUriBuilder
         private string password;
         private string path;
         private Credentials credentials;
+        private int? port;
 
         private class Credentials
         {
@@ -114,6 +115,15 @@ namespace FluentUriBuilder
             return this;
         }
 
+        public FluentUriBuilder WithPort(int port)
+        {
+            port.ThrowIfNotInRange(-1, 65535, nameof(port));
+
+            this.port = port;
+
+            return this;
+        }
+
         /// <summary>
         ///     Creates a new <see cref="Uri"/> instance from the values specified.
         /// </summary>
@@ -131,6 +141,7 @@ namespace FluentUriBuilder
             if (fragment != null) uriBuilder.Fragment = fragment;
             if (host != null) uriBuilder.Host = host;
             if (path != null) uriBuilder.Path = path;
+            if (port != null) uriBuilder.Port = port.Value;
 
             if (credentials != null)
             {

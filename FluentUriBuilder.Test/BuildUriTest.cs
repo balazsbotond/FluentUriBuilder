@@ -172,9 +172,9 @@ namespace FluentUriBuilder.Test
         public void PathIsUsedIfSpecified()
         {
             var path = "/just/a/path.extension";
-            var exampleUriWithoutFragment = "http://user:password@example.com:888?somekey=some%2bvalue&otherkey=some%2bvalue";
+            var exampleUriWithoutPath = "http://user:password@example.com:888?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
 
-            BuildUri.From(exampleUriWithoutFragment)
+            BuildUri.From(exampleUriWithoutPath)
                 .WithPath(path)
                 .ToUri()
                 .LocalPath
@@ -201,6 +201,57 @@ namespace FluentUriBuilder.Test
                 .ToUri()
                 .LocalPath
                 .Should().Be("/");
+        }
+
+        #endregion
+
+        #region Port
+
+        [Fact]
+        public void PortCannotBeLessThanMinus1()
+        {
+            BuildUri.Create().Invoking(b => b.WithPort(-2)).ShouldThrow<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void PortCannotBeGreaterThan65535()
+        {
+            BuildUri.Create().Invoking(b => b.WithPort(65536)).ShouldThrow<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void PortIsUsedIfSpecified()
+        {
+            var port = 1337;
+            var exampleUriWithoutPort = "http://user:password@example.com/path/to?somekey=some%2bvalue&otherkey=some%2bvalue#fragment";
+
+            BuildUri.From(exampleUriWithoutPort)
+                .WithPort(port)
+                .ToUri()
+                .Port
+                .Should().Be(port);
+        }
+
+        [Fact]
+        public void ExistingPortIsUpdated()
+        {
+            var port = 1337;
+
+            BuildUri.From(fullTestUri)
+                .WithPort(port)
+                .ToUri()
+                .Port
+                .Should().Be(port);
+        }
+
+        [Fact]
+        public void ExistingPortIsDeletedIfProtocolDefaultPortSpecified()
+        {
+            BuildUri.From(fullTestUri)
+                .WithPort(-1)
+                .ToUri()
+                .Port
+                .Should().Be(80);
         }
 
         #endregion
