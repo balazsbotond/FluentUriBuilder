@@ -7,8 +7,8 @@ namespace FluentUriBuilder
         private string baseUri;
         private string fragment;
         private string host;
-        private string password;
         private string path;
+        private string scheme;
         private Credentials credentials;
         private int? port;
 
@@ -124,6 +124,38 @@ namespace FluentUriBuilder
             return this;
         }
 
+        public FluentUriBuilder WithScheme(UriScheme scheme)
+        {
+            switch (scheme)
+            {
+                case UriScheme.File:
+                    this.scheme = "file";
+                    break;
+                case UriScheme.Ftp:
+                    this.scheme = "ftp";
+                    break;
+                case UriScheme.Gopher:
+                    this.scheme = "gopher";
+                    break;
+                case UriScheme.Http:
+                    this.scheme = "http";
+                    break;
+                case UriScheme.Https:
+                    this.scheme = "https";
+                    break;
+                case UriScheme.Mailto:
+                    this.scheme = "mailto";
+                    break;
+                case UriScheme.News:
+                    this.scheme = "news";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(scheme));
+            }
+
+            return this;
+        }
+
         /// <summary>
         ///     Creates a new <see cref="Uri"/> instance from the values specified.
         /// </summary>
@@ -142,6 +174,7 @@ namespace FluentUriBuilder
             if (host != null) uriBuilder.Host = host;
             if (path != null) uriBuilder.Path = path;
             if (port != null) uriBuilder.Port = port.Value;
+            if (scheme != null) uriBuilder.Scheme = scheme;
 
             if (credentials != null)
             {

@@ -255,5 +255,43 @@ namespace FluentUriBuilder.Test
         }
 
         #endregion
+
+        #region Scheme
+
+        [Theory]
+        [InlineData(UriScheme.File, "file")]
+        [InlineData(UriScheme.Ftp, "ftp")]
+        [InlineData(UriScheme.Gopher, "gopher")]
+        [InlineData(UriScheme.Http, "http")]
+        [InlineData(UriScheme.Https, "https")]
+        [InlineData(UriScheme.Mailto, "mailto")]
+        [InlineData(UriScheme.News, "news")]
+        public void SchemeIsUsedIfSpecified(UriScheme scheme, string expectedScheme)
+        {
+            BuildUri.Create()
+                .WithScheme(scheme)
+                .WithHost("example.com")
+                .ToUri()
+                .Scheme
+                .Should().Be(expectedScheme);
+        }
+
+        [Theory]
+        [InlineData(UriScheme.Ftp, "ftp")]
+        [InlineData(UriScheme.Gopher, "gopher")]
+        [InlineData(UriScheme.Http, "http")]
+        [InlineData(UriScheme.Https, "https")]
+        [InlineData(UriScheme.Mailto, "mailto")]
+        [InlineData(UriScheme.News, "news")]
+        public void ExistingSchemeIsUpdated(UriScheme scheme, string expectedScheme)
+        {
+            BuildUri.From(fullTestUri)
+                .WithScheme(scheme)
+                .ToUri()
+                .Scheme
+                .Should().Be(expectedScheme);
+        }
+
+        #endregion
     }
 }
