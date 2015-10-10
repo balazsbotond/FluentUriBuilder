@@ -158,15 +158,50 @@ namespace FluentUriBuilder.Test
                 .Should().Be(expectedUserInfo);
         }
 
-        //[Fact]
-        //public void ExistingPasswordIsDeletedIfEmptyPasswordSpecified()
-        //{
-        //    BuildUri.From(fullTestUri)
-        //        .WithUserInfo(string.Empty)
-        //        .ToUri()
-        //        .UserInfo
-        //        .Should().Be("user");
-        //}
+        #endregion
+
+        #region Path
+
+        [Fact]
+        public void PathCannotBeNull()
+        {
+            BuildUri.Create().Invoking(b => b.WithPath(null)).ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void PathIsUsedIfSpecified()
+        {
+            var path = "/just/a/path.extension";
+            var exampleUriWithoutFragment = "http://user:password@example.com:888?somekey=some%2bvalue&otherkey=some%2bvalue";
+
+            BuildUri.From(exampleUriWithoutFragment)
+                .WithPath(path)
+                .ToUri()
+                .LocalPath
+                .Should().Be(path);
+        }
+
+        [Fact]
+        public void ExistingPathIsUpdated()
+        {
+            var path = "/just/a/path.extension";
+
+            BuildUri.From(fullTestUri)
+                .WithPath(path)
+                .ToUri()
+                .LocalPath
+                .Should().Be(path);
+        }
+
+        [Fact]
+        public void ExistingPathIsDeletedIfEmptyFragmentSpecified()
+        {
+            BuildUri.From(fullTestUri)
+                .WithPath(string.Empty)
+                .ToUri()
+                .LocalPath
+                .Should().Be("/");
+        }
 
         #endregion
     }

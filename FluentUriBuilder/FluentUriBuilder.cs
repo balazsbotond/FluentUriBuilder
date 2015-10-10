@@ -8,6 +8,7 @@ namespace FluentUriBuilder
         private string fragment;
         private string host;
         private string password;
+        private string path;
         private Credentials credentials;
 
         private class Credentials
@@ -96,6 +97,24 @@ namespace FluentUriBuilder
         }
 
         /// <summary>
+        ///     Sets or updates the local path in the URI.
+        /// </summary>
+        /// <param name="path">
+        ///     The new value of the local path.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        public FluentUriBuilder WithPath(string path)
+        {
+            path.ThrowIfNull(nameof(path));
+
+            this.path = path;
+
+            return this;
+        }
+
+        /// <summary>
         ///     Creates a new <see cref="Uri"/> instance from the values specified.
         /// </summary>
         /// <returns>
@@ -111,6 +130,7 @@ namespace FluentUriBuilder
 
             if (fragment != null) uriBuilder.Fragment = fragment;
             if (host != null) uriBuilder.Host = host;
+            if (path != null) uriBuilder.Path = path;
 
             if (credentials != null)
             {
