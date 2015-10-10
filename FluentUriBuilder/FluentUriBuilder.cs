@@ -9,6 +9,7 @@ namespace FluentUriBuilder
     public class FluentUriBuilder
     {
         private string baseUri;
+        private string fragment;
 
         public FluentUriBuilder(string baseUri)
         {
@@ -17,7 +18,18 @@ namespace FluentUriBuilder
 
         public Uri ToUri()
         {
-            return new Uri(this.baseUri);
+            var uriBuilder = new UriBuilder(this.baseUri);
+
+            uriBuilder.Fragment = this.fragment;
+
+            return uriBuilder.Uri;
+        }
+
+        public FluentUriBuilder WithFragment(string fragment)
+        {
+            this.fragment = fragment;
+
+            return this;
         }
     }
 }
