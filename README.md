@@ -28,7 +28,7 @@ var uri = FluentUriBuilder.Create()
         param2 = "val2"
     })
     .Fragment("fragment")
-    .ToUri();
+    .ToString();
 ```
 
 Query parameters can also be specified using an `IDictionary<TKey, TValue>` or one by one,
@@ -41,12 +41,12 @@ To modify an existing URI:
 var uri = FluentUriBuilder.From("http://example.com/somepath?foo=bar#baz")
     .Port(8080)
     .Path("/otherpath")
-    .WithoutQueryParams()
-    .WithoutFragment()
+    .RemoveQueryParams()
+    .RemoveFragment()
     .ToUri();
 ```
 
-The result is:
+The result is this `Uri` instance:
 
 ```
 http://example.com:8080/otherpath
