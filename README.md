@@ -11,7 +11,7 @@ Quick Examples
 To build this new URI:
 
 ```
-ftp://user:password@example.com:888/path/to/file?param1=val1&param2=val2#fragment
+ftp://user:password@example.com:888/path/to/file?param1=val1&param2=a%23value%26with%40weird%3fcharacters#fragment
 ```
 
 Write:
@@ -25,7 +25,7 @@ var uri = FluentUriBuilder.Create()
     .Path("path/to/file")
     .QueryParams(new {
         param1 = "val1",
-        param2 = "val2"
+        param2 = "a#value&with@weird?characters"
     })
     .Fragment("fragment")
     .ToString();
