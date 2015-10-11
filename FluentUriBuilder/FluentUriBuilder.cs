@@ -1,9 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Web;
 
 namespace FluentUriBuilder
 {
     public class FluentUriBuilder
     {
+        //
+        // If the following private fields are
+        //
+        // - `null`, that means they haven't been updated,
+        // - empty, that means they have been removed,
+        //
+        // otherwise, they have been updated with a value.
+        //
         private string baseUri;
         private string fragment;
         private string host;
@@ -12,6 +22,7 @@ namespace FluentUriBuilder
         private bool removePort;
         private int? port;
         private UriCredentials credentials;
+        private List<UriQueryParam> queryParams;
 
         private class UriCredentials
         {
@@ -23,6 +34,18 @@ namespace FluentUriBuilder
 
             public string User { get; set; }
             public string Password { get; set; }
+        }
+
+        private class UriQueryParam
+        {
+            public UriQueryParam(string key, string value)
+            {
+                Key = key;
+                Value = value;
+            }
+
+            public string Key { get; set; }
+            public string Value { get; set; }
         }
 
         public static FluentUriBuilder From(string baseUri)
@@ -256,6 +279,104 @@ namespace FluentUriBuilder
         }
 
         /// <summary>
+        ///     Adds a query parameter to the URI.
+        /// </summary>
+        /// <param name="key">
+        ///     The key (name) of the query parameter.
+        /// </param>
+        /// <param name="value">
+        ///     The value of the query parameter.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        ///     If either <see cref="key"/> or <see cref="value"/> is null or empty.
+        /// </exception>
+        public FluentUriBuilder QueryParam(string key, string value)
+        {
+            key.ThrowIfNullOrWhiteSpace(nameof(key));
+            value.ThrowIfNullOrWhiteSpace(nameof(value));
+
+            initializeQueryParamsList();
+
+            queryParams.Add(new UriQueryParam(key, value));
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Sets the query parameters of the URI.
+        /// </summary>
+        /// <param name="queryParams">
+        ///     The query parameters to add to the URI.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     If <see cref="queryParams"/> is <c>null</c>;
+        /// </exception>
+        public FluentUriBuilder QueryParams(IDictionary<string, object> queryParams)
+        {
+            queryParams.ThrowIfNull(nameof(queryParams));
+
+            initializeQueryParamsList();
+
+            foreach (var kvp in queryParams)
+            {
+                this.queryParams.Add(new UriQueryParam(kvp.Key, kvp.Value.ToString()));
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Sets the query parameters of the URI.
+        /// </summary>
+        /// <param name="queryParams">
+        ///     The object containing the query parameters to add to the URI. Property names
+        ///     and their values are used as parameter keys and values.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     If <see cref="queryParams"/> is <c>null</c>;
+        /// </exception>
+        public FluentUriBuilder QueryParams(object queryParams)
+        {
+            queryParams.ThrowIfNull(nameof(queryParams));
+
+            initializeQueryParamsList();
+
+            var properties = queryParams.GetType().GetProperties();
+
+            foreach (var property in properties)
+            {
+                var key = property.Name;
+                var value = property.GetValue(queryParams);
+
+                this.queryParams.Add(new UriQueryParam(key, value.ToString()));
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Removes all query parameters from the URI.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="FluentUriBuilder"/> instance to allow chaining.
+        /// </returns>
+        public FluentUriBuilder RemoveQueryParams()
+        {
+            queryParams = new List<UriQueryParam>();
+
+            return this;
+        }
+
+        /// <summary>
         ///     Creates a new <see cref="Uri"/> instance from the values specified.
         /// </summary>
         /// <returns>
@@ -287,7 +408,40 @@ namespace FluentUriBuilder
                 uriBuilder.Password = credentials.Password;
             }
 
+            if (queryParams != null)
+            {
+                var parameters = HttpUtility.ParseQueryString(string.Empty);
+
+                foreach (var queryParam in queryParams)
+                {
+                    parameters.Add(queryParam.Key, queryParam.Value);
+                }
+
+                uriBuilder.Query = parameters.ToString();
+            }
+
             return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        ///     Returns the URI build by this instance as a string.
+        /// </summary>
+        /// <returns>
+        ///     The URI build by this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return ToUri().AbsoluteUri;
+        }
+
+        private void initializeQueryParamsList()
+        {
+            if (queryParams == null)
+            {
+                // This is the first time we add query params. `null` indicated that query
+                // params have not yet been updated, so we have to create an empty list.
+                queryParams = new List<UriQueryParam>();
+            }
         }
     }
 }

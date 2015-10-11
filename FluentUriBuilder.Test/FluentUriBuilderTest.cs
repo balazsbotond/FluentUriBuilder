@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 
 namespace FluentUriBuilder.Test
 {
@@ -352,6 +353,250 @@ namespace FluentUriBuilder.Test
                 .ToUri()
                 .Scheme
                 .Should().Be(expectedScheme);
+        }
+
+        #endregion
+
+        #region ToString
+
+        [Fact]
+        public void ToStringReturnsTheSameStringAsUriAbsoluteUri()
+        {
+            var builder = FluentUriBuilder.From(fullTestUri);
+            var uri = new Uri(fullTestUri);
+
+            builder.ToString().Should().Be(uri.AbsoluteUri);
+        }
+
+        #endregion
+
+        #region QueryParam
+
+        [Fact]
+        public void QueryParamKeyCannotBeNullOrWhiteSpace()
+        {
+            FluentUriBuilder.Create().Invoking(b => b.QueryParam(null, "a")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.QueryParam(string.Empty, "a")).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.QueryParam(" ", "a")).ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
+        public void QueryParamValueCannotBeNullOrWhiteSpace()
+        {
+            FluentUriBuilder.Create().Invoking(b => b.QueryParam("a", null)).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.QueryParam("a", string.Empty)).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.QueryParam("a", " ")).ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
+        public void SingleQueryParamIsUsed()
+        {
+            var uri = "http://example.com";
+
+            FluentUriBuilder.From(uri)
+                .QueryParam("testkey", "testvalue")
+                .ToUri()
+                .Query
+                .Should().Be("?testkey=testvalue");
+        }
+
+        [Fact]
+        public void MultipleQueryParamsAreUsed()
+        {
+            var uri = "http://example.com";
+
+            FluentUriBuilder.From(uri)
+                .QueryParam("testkey", "testvalue")
+                .QueryParam("anotherkey", "anothervalue")
+                .ToUri()
+                .Query
+                .Should().Be("?testkey=testvalue&anotherkey=anothervalue");
+        }
+
+        [Fact]
+        public void QueryParamsAreUrlEncoded()
+        {
+            var uri = "http://example.com";
+
+            FluentUriBuilder.From(uri)
+                .QueryParam("testkey", ":?&=#/@")
+                .ToUri()
+                .Query
+                .Should().Be("?testkey=%3a%3f%26%3d%23%2f%40");
+        }
+
+        [Fact]
+        public void AddingAQueryParamClearsExistingQueryParams()
+        {
+            var uri = "http://example.com?oldparam=oldvalue";
+
+            FluentUriBuilder.From(uri)
+                .QueryParam("testkey", "testvalue")
+                .ToUri()
+                .Query
+                .Should().Be("?testkey=testvalue");
+        }
+
+        #endregion
+
+        #region QueryParams Dictionary syntax
+
+        [Fact]
+        public void QueryParamsDictionaryCannotBeNull()
+        {
+            FluentUriBuilder.Create()
+                .Invoking(b => b.QueryParams(null))
+                .ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void EmptyQueryParamsDictionaryAddsNoQueryParams()
+        {
+            var uri = "http://example.com/";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new Dictionary<string, object>())
+                .ToString()
+                .Should().Be(uri);
+        }
+
+        [Fact]
+        public void EmptyQueryParamsDictionaryClearsExistingQueryParams()
+        {
+            var uri = "http://example.com?param=value";
+            var expectedUri = "http://example.com/";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new Dictionary<string, object>())
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        [Fact]
+        public void QueryParamUsedFromSingleElementDictionary()
+        {
+            var uri = "http://example.com";
+            var expectedUri = "http://example.com/?param=value";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new Dictionary<string, object> { { "param", "value" } })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        [Fact]
+        public void MultipleQueryParamsAreUsedFromMultiElementDictionary()
+        {
+            var uri = "http://example.com";
+            var expectedUri = "http://example.com/?param=value&otherparam=othervalue";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new Dictionary<string, object>
+                {
+                    { "param", "value" },
+                    { "otherparam", "othervalue" },
+                })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        [Fact]
+        public void ExistingQueryParamsAreDeletedWhenQueryParamsDictionaryIsUsed()
+        {
+            var uri = "http://example.com/?oldparam=oldvalue";
+            var expectedUri = "http://example.com/?param=value";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new Dictionary<string, object> { { "param", "value" } })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        #endregion
+
+        #region QueryParams object syntax
+
+        [Fact]
+        public void QueryParamsObjectCannotBeNull()
+        {
+            FluentUriBuilder.Create()
+                .Invoking(b => b.QueryParams((object)null))
+                .ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void EmptyQueryParamsObjectAddsNoQueryParams()
+        {
+            var uri = "http://example.com/";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new { })
+                .ToString()
+                .Should().Be(uri);
+        }
+
+        [Fact]
+        public void EmptyQueryParamsObjectClearsExistingQueryParams()
+        {
+            var uri = "http://example.com?param=value";
+            var expectedUri = "http://example.com/";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new { })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        [Fact]
+        public void QueryParamUsedFromSinglePropertyObject()
+        {
+            var uri = "http://example.com";
+            var expectedUri = "http://example.com/?param=value";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new { param = "value" })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        [Fact]
+        public void MultipleQueryParamsAreUsedFromMultiPropertyObject()
+        {
+            var uri = "http://example.com";
+            var expectedUri = "http://example.com/?param=value&otherparam=othervalue";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new { param = "value", otherparam = "othervalue" })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        [Fact]
+        public void ExistingQueryParamsAreDeletedWhenQueryParamsObjectIsUsed()
+        {
+            var uri = "http://example.com?oldparam=oldvalue";
+            var expectedUri = "http://example.com/?param=value";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new { param = "value" })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        #endregion
+
+        #region RemoveQueryParams
+
+        [Fact]
+        public void RemoveQueryParamsClearsExistingQueryParams()
+        {
+            var uri = "http://example.com?param=value&otherparam=othervalue";
+            var expectedUri = "http://example.com/";
+
+            FluentUriBuilder.From(uri)
+                .RemoveQueryParams()
+                .ToString()
+                .Should().Be(expectedUri);
         }
 
         #endregion

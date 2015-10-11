@@ -4,7 +4,7 @@ namespace FluentUriBuilder
 {
     internal static class ArgumentValidationExtensions
     {
-        public static void ThrowIfNull(this string value, string paramName)
+        public static void ThrowIfNull(this object value, string paramName)
         {
             if (value == null)
             {
