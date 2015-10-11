@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>FluentUriBuilder</id>
+    <version>1.0.0</version>
+    <title>Fluent URI Builder</title>
+    <authors>Botond Balazs &lt;balazsbotond@gmail.com&gt;</authors>
+    <owners>Botond Balazs &lt;balazsbotond@gmail.com&gt;</owners>
+    <licenseUrl>https://raw.githubusercontent.com/balazsbotond/FluentUriBuilder/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/balazsbotond/FluentUriBuilder</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A safer and more readable way to build URI's in .NET</description>
+    <releaseNotes>Initial version</releaseNotes>
+    <copyright>Copyright 2015 Botond Balázs</copyright>
+    <tags>URI URL fluent UriBuilder</tags>
+  </metadata>
+</package>
