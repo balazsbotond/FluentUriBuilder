@@ -7,7 +7,7 @@
     <ProjectGuid>{AD1F337D-052C-4E05-A525-4D0E6541E53C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FluentUriBuilder</RootNamespace>
+    <RootNamespace>FluentUri</RootNamespace>
     <AssemblyName>FluentUriBuilder</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -45,6 +45,9 @@
     <Compile Include="FluentUriBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UriScheme.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FluentUriBuilder.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,7 +3,7 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 
-namespace FluentUriBuilder.Test
+namespace FluentUri.Test
 {
     public class FluentUriBuilderTest
     {

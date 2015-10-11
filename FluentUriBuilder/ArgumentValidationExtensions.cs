@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FluentUriBuilder
+namespace FluentUri
 {
     internal static class ArgumentValidationExtensions
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 
-namespace FluentUriBuilder
+namespace FluentUri
 {
     public class FluentUriBuilder
     {
