@@ -82,7 +82,8 @@ var valueWithWeirdCharacters = "a#value&with@weird?characters";
 var uri = FluentUriBuilder
     .From("http://example.com/path")
 	.QueryParam("param1", valueWithWeirdCharacters)
-	.QueryParam("param2", "asdf");
+	.QueryParam("param2", "asdf")
+	.ToString();
 ```
 
 More Examples
