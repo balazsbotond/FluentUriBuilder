@@ -81,10 +81,8 @@ This is why I created `FluentUriBuilder`: to allow creating URI's *in a safe and
 var valueWithWeirdCharacters = "a#value&with@weird?characters";
 var uri = FluentUriBuilder
     .From("http://example.com/path")
-	.QueryParams(new {
-	    param1 = valueWithWeirdCharacters,
-		param2 = "asdf"
-	});
+	.QueryParam("param1", valueWithWeirdCharacters)
+	.QueryParam("param2", "asdf");
 ```
 
 More Examples
