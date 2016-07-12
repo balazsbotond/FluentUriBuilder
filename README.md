@@ -32,9 +32,35 @@ var uri = FluentUriBuilder.Create()
     .ToString();
 ```
 
-Query parameters can also be specified using an `IDictionary<TKey, TValue>` or one by one,
-by calling `.QueryParam("key", "value")` repeatedly. The latter can be used to specify more
-query parameters with the same name.
+Query parameters can also be specified using an `IDictionary<TKey, TValue>`:
+
+```csharp
+var params = new Dictionary<string, string> {
+	{ "user", "averagejoe236" },
+	{ "apiKey", "af43af43rcfaf34xqf" }
+};
+
+var uri = FluentUriBuilder.Create()
+    .Scheme(UriScheme.Http)
+	.Host("facebook.com")
+	.Path("posts")
+	.QueryParams(params)
+	.ToString();
+```
+
+Or one by one, by calling `.QueryParam("key", "value")` repeatedly:
+
+```csharp
+var uri = FluentUriBuilder.Create()
+    .Scheme(UriScheme.Http)
+	.Host("google.com")
+	.Path("/")
+	.QueryParam("q", "FluentUriBuilder")
+	.QueryParam("source", "hp")
+	.ToString();
+```
+
+The latter can be used to specify more query parameters with the same name.
 
 To modify an existing URI:
 
@@ -47,7 +73,7 @@ var uri = FluentUriBuilder.From("http://example.com/somepath?foo=bar#baz")
     .ToUri();
 ```
 
-The result is this `Uri` instance:
+The result is an `Uri` instance:
 
 ```
 http://example.com:8080/otherpath
