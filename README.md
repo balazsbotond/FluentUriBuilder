@@ -40,7 +40,7 @@ You often see code that creates URI's using simple string concatenation or forma
 ```csharp
 var valueWithWeirdCharacters = "a#value&with@weird?characters";
 var badUri1 = "http://example.com/path?param1=" + valueWithWeirdCharacters + "&param2=asdf";
-var badUri2 = "http://example.com/path?param1={0}&param2=asdf"
+var badUri2 = string.Format("http://example.com/path?param1={0}&param2=asdf", valueWithWeirdCharacters);
 ```
 
 The result is an invalid URI because the value of `param1` is not escaped:
