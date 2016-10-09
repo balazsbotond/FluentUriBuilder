@@ -600,5 +600,37 @@ namespace FluentUri.Test
         }
 
         #endregion
+
+        #region GetParam
+
+        [Fact]
+        public void GetsQueryParamValueUsingFrom()
+        {
+            FluentUriBuilder.From(fullTestUri)
+                .GetParam("somekey")
+                .Should()
+                .Be("some%2bvalue");
+        }
+
+        [Fact]
+        public void GetsQueryParamValueUsingQueryParams()
+        {
+            FluentUriBuilder.Create()
+                .Scheme(UriScheme.Http)
+                .Host("example.com")
+                .QueryParam("testkey", "testvalue")
+                .GetParam("testkey")
+                .Should()
+                .Be("testvalue");
+        }
+
+        [Fact]
+        public void GetParamValueShouldThrow()
+        {
+            var exception = Record.Exception(() => FluentUriBuilder.From(fullTestUri).GetParam(""));
+            Assert.IsType<ArgumentException>(exception);
+        }
+
+        #endregion
     }
 }

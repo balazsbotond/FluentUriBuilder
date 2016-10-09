@@ -364,6 +364,27 @@ namespace FluentUri
         }
 
         /// <summary>
+        ///     Returns the value of a query parameter.
+        /// </summary>
+        /// <param name="key">
+        ///     The key that will be used to search the query parameters.
+        /// </param>
+        /// <returns>
+        ///     Value of the query parameter searched for with <see cref="key"/>
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        ///     If either <see cref="key"/> is null or empty.
+        /// </exception>
+        public string GetParam(string key)
+        {
+            key.ThrowIfNullOrWhiteSpace(nameof(key));
+
+            return this.queryParams != null
+                ? this.queryParams.Find(p => p.Key == key).Value
+                : HttpUtility.UrlEncode(HttpUtility.ParseQueryString(this.ToUri().Query).GetValues(key)[0]);
+        }
+
+        /// <summary>
         ///     Removes all query parameters from the URI.
         /// </summary>
         /// <returns>
