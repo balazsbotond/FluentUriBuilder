@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FluentUriBuilder.Test</RootNamespace>
-    <AssemblyName>FluentUriBuilder.Test</AssemblyName>
+    <AssemblyName>FluentUri.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -75,8 +75,20 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="FluentUriBuilderTest.cs" />
+    <Compile Include="Fragment.cs" />
+    <Compile Include="General.cs" />
+    <Compile Include="Host.cs" />
+    <Compile Include="Password.cs" />
+    <Compile Include="Path.cs" />
+    <Compile Include="Port.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryParam.cs" />
+    <Compile Include="QuerysParamsDictionarySyntax.cs" />
+    <Compile Include="QueryParamsObjectSyntax.cs" />
+    <Compile Include="RemoveQueryParams.cs" />
+    <Compile Include="Scheme.cs" />
+    <Compile Include="TestData.cs" />
+    <Compile Include="ToString.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
