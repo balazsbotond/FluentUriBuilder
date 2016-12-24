@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>FluentUriBuilder</id>
-    <version>1.0.1</version>
+    <version>1.2.0</version>
     <title>Fluent URI Builder</title>
     <authors>Botond Balazs &lt;balazsbotond@gmail.com&gt;</authors>
     <owners>Botond Balazs &lt;balazsbotond@gmail.com&gt;</owners>
@@ -10,8 +10,11 @@
     <projectUrl>https://github.com/balazsbotond/FluentUriBuilder</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A safer and more readable way to build URI's in .NET</description>
-    <releaseNotes>Change the namespace to `FluentUri`.</releaseNotes>
-    <copyright>Copyright 2015 Botond Balázs</copyright>
+    <releaseNotes>
+      - Fixed bug #4: Dictionary&lt;string, string=""&gt; parameters don't work
+        (https://github.com/balazsbotond/FluentUriBuilder/issues/4)
+    </releaseNotes>
+    <copyright>Copyright 2015-2016 Botond Balázs</copyright>
     <tags>URI URL fluent UriBuilder</tags>
   </metadata>
 </package>

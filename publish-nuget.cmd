@@ -14,4 +14,4 @@ echo(
 echo Press any key to publish FluentUriBuilder.%1.nupkg.
 echo(
 pause
-nuget push FluentUriBuilder.%1.nupkg
+nuget push FluentUriBuilder.%1.nupkg -source nuget.org
