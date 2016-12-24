@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>FluentUriBuilder</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <title>Fluent URI Builder</title>
     <authors>Botond Balazs &lt;balazsbotond@gmail.com&gt;</authors>
     <owners>Botond Balazs &lt;balazsbotond@gmail.com&gt;</owners>
@@ -11,8 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A safer and more readable way to build URI's in .NET</description>
     <releaseNotes>
-      - Fixed bug #4: Dictionary&lt;string, string=""&gt; parameters don't work
-        (https://github.com/balazsbotond/FluentUriBuilder/issues/4)
+      Canonicalise query parameter value serialization by using
+      CultureInfo.InvariantCulture when converting to string.
     </releaseNotes>
     <copyright>Copyright 2015-2016 Botond Balázs</copyright>
     <tags>URI URL fluent UriBuilder</tags>
