@@ -93,7 +93,7 @@ namespace FluentUri.Test
                 .QueryParam("anotherkey", 2.5)
                 .ToUri()
                 .Query
-                .Should().Be("?testkey=1&anotherkey=2%2c5");
+                .Should().Be("?testkey=1&anotherkey=2.5");
         }
     }
 }

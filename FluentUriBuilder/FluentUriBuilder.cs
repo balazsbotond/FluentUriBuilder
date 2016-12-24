@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web;
 
 namespace FluentUri
@@ -298,7 +299,7 @@ namespace FluentUri
             key.ThrowIfNullOrWhiteSpace(nameof(key));
             value.ThrowIfNull(nameof(value));
 
-            var valueStr = value.ToString();
+            var valueStr = value.ToStringInvariantCulture();
             valueStr.ThrowIfNullOrWhiteSpace(nameof(value));
 
             initializeQueryParamsList();
@@ -328,7 +329,8 @@ namespace FluentUri
 
             foreach (var kvp in queryParams)
             {
-                this.queryParams.Add(new UriQueryParam(kvp.Key, kvp.Value.ToString()));
+                this.queryParams.Add(
+                    new UriQueryParam(kvp.Key, kvp.Value.ToStringInvariantCulture()));
             }
 
             return this;
@@ -360,7 +362,8 @@ namespace FluentUri
                 var key = property.Name;
                 var value = property.GetValue(queryParams);
 
-                this.queryParams.Add(new UriQueryParam(key, value.ToString()));
+                this.queryParams.Add(
+                    new UriQueryParam(key, value.ToStringInvariantCulture()));
             }
 
             return this;
@@ -427,10 +430,10 @@ namespace FluentUri
         }
 
         /// <summary>
-        ///     Returns the URI build by this instance as a string.
+        ///     Returns the URI built by this instance as a string.
         /// </summary>
         /// <returns>
-        ///     The URI build by this instance.
+        ///     The URI built by this instance.
         /// </returns>
         public override string ToString()
         {
