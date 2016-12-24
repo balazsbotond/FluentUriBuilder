@@ -437,6 +437,19 @@ namespace FluentUri.Test
                 .Should().Be("?testkey=testvalue");
         }
 
+        [Fact]
+        public void QueryParamValuesCanBeOfAnyType()
+        {
+            var uri = "http://example.com";
+
+            FluentUriBuilder.From(uri)
+                .QueryParam("testkey", 1)
+                .QueryParam("anotherkey", 2.5)
+                .ToUri()
+                .Query
+                .Should().Be("?testkey=1&anotherkey=2.5");
+        }
+
         #endregion
 
         #region QueryParams Dictionary syntax
