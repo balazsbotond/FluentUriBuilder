@@ -383,7 +383,7 @@ namespace FluentUri.Test
         [Fact]
         public void QueryParamValueCannotBeNullOrWhiteSpace()
         {
-            FluentUriBuilder.Create().Invoking(b => b.QueryParam("a", null)).ShouldThrow<ArgumentException>();
+            FluentUriBuilder.Create().Invoking(b => b.QueryParam("a", (string)null)).ShouldThrow<ArgumentException>();
             FluentUriBuilder.Create().Invoking(b => b.QueryParam("a", string.Empty)).ShouldThrow<ArgumentException>();
             FluentUriBuilder.Create().Invoking(b => b.QueryParam("a", " ")).ShouldThrow<ArgumentException>();
         }
@@ -508,6 +508,18 @@ namespace FluentUri.Test
 
             FluentUriBuilder.From(uri)
                 .QueryParams(new Dictionary<string, object> { { "param", "value" } })
+                .ToString()
+                .Should().Be(expectedUri);
+        }
+
+        [Fact]
+        public void KeyTypeCanBeString()
+        {
+            var uri = "http://example.com/?oldparam=oldvalue";
+            var expectedUri = "http://example.com/?param=value";
+
+            FluentUriBuilder.From(uri)
+                .QueryParams(new Dictionary<string, string> { { "param", "value" } })
                 .ToString()
                 .Should().Be(expectedUri);
         }

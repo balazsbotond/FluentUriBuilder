@@ -293,14 +293,17 @@ namespace FluentUri
         /// <exception cref="ArgumentException">
         ///     If either <see cref="key"/> or <see cref="value"/> is null or empty.
         /// </exception>
-        public FluentUriBuilder QueryParam(string key, string value)
+        public FluentUriBuilder QueryParam<T>(string key, T value)
         {
             key.ThrowIfNullOrWhiteSpace(nameof(key));
-            value.ThrowIfNullOrWhiteSpace(nameof(value));
+            value.ThrowIfNull(nameof(value));
+
+            var valueStr = value.ToString();
+            valueStr.ThrowIfNullOrWhiteSpace(nameof(value));
 
             initializeQueryParamsList();
 
-            queryParams.Add(new UriQueryParam(key, value));
+            queryParams.Add(new UriQueryParam(key, valueStr));
 
             return this;
         }
@@ -317,7 +320,7 @@ namespace FluentUri
         /// <exception cref="ArgumentNullException">
         ///     If <see cref="queryParams"/> is <c>null</c>;
         /// </exception>
-        public FluentUriBuilder QueryParams(IDictionary<string, object> queryParams)
+        public FluentUriBuilder QueryParams<T>(IDictionary<string, T> queryParams)
         {
             queryParams.ThrowIfNull(nameof(queryParams));
 
