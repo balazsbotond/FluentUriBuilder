@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Web;
 
 namespace FluentUri
@@ -78,7 +77,7 @@ namespace FluentUri
         /// </exception>
         public FluentUriBuilder Fragment(string fragment)
         {
-            fragment.ThrowIfNull(nameof(fragment));
+            Precondition.NotNull(fragment, nameof(fragment));
 
             this.fragment = fragment;
 
@@ -114,7 +113,7 @@ namespace FluentUri
         /// </exception>
         public FluentUriBuilder Host(string host)
         {
-            host.ThrowIfNullOrWhiteSpace(nameof(host));
+            Precondition.NotNullOrWhiteSpace(host, nameof(host));
 
             this.host = host;
 
@@ -138,8 +137,8 @@ namespace FluentUri
         /// </exception>
         public FluentUriBuilder Credentials(string user, string password)
         {
-            user.ThrowIfNullOrWhiteSpace(nameof(user));
-            password.ThrowIfNullOrWhiteSpace(nameof(password));
+            Precondition.NotNullOrWhiteSpace(user, nameof(user));
+            Precondition.NotNullOrWhiteSpace(password, nameof(password));
 
             credentials = new UriCredentials(user, password);
 
@@ -170,7 +169,7 @@ namespace FluentUri
         /// </returns>
         public FluentUriBuilder Path(string path)
         {
-            path.ThrowIfNull(nameof(path));
+            Precondition.NotNull(path, nameof(path));
 
             this.path = path;
 
@@ -205,7 +204,9 @@ namespace FluentUri
         /// </exception>
         public FluentUriBuilder Port(int port)
         {
-            port.ThrowIfNotInRange(-1, 65535, nameof(port));
+            Precondition.Fulfills(port,
+                p => -1 <= p && p <= 65535, nameof(port), 
+                "Port should be between -1 and 65535, inclusive");
 
             this.port = port;
 
@@ -296,11 +297,11 @@ namespace FluentUri
         /// </exception>
         public FluentUriBuilder QueryParam<T>(string key, T value)
         {
-            key.ThrowIfNullOrWhiteSpace(nameof(key));
-            value.ThrowIfNull(nameof(value));
+            Precondition.NotNullOrWhiteSpace(key, nameof(key));
+            Precondition.NotNull(value, nameof(value));
 
-            var valueStr = value.ToStringInvariantCulture();
-            valueStr.ThrowIfNullOrWhiteSpace(nameof(value));
+            var valueStr = StringHelper.ToStringInvariantCulture(value);
+            Precondition.NotNullOrWhiteSpace(valueStr, nameof(value));
 
             initializeQueryParamsList();
 
@@ -323,14 +324,14 @@ namespace FluentUri
         /// </exception>
         public FluentUriBuilder QueryParams<T>(IDictionary<string, T> queryParams)
         {
-            queryParams.ThrowIfNull(nameof(queryParams));
+            Precondition.NotNull(queryParams, nameof(queryParams));
 
             initializeQueryParamsList();
 
             foreach (var kvp in queryParams)
             {
                 this.queryParams.Add(
-                    new UriQueryParam(kvp.Key, kvp.Value.ToStringInvariantCulture()));
+                    new UriQueryParam(kvp.Key, StringHelper.ToStringInvariantCulture(kvp.Value)));
             }
 
             return this;
@@ -351,7 +352,7 @@ namespace FluentUri
         /// </exception>
         public FluentUriBuilder QueryParams(object queryParams)
         {
-            queryParams.ThrowIfNull(nameof(queryParams));
+            Precondition.NotNull(queryParams, nameof(queryParams));
 
             initializeQueryParamsList();
 
@@ -360,10 +361,10 @@ namespace FluentUri
             foreach (var property in properties)
             {
                 var key = property.Name;
-                var value = property.GetValue(queryParams);
+                var value = property.GetValue(queryParams, index: null);
 
                 this.queryParams.Add(
-                    new UriQueryParam(key, value.ToStringInvariantCulture()));
+                    new UriQueryParam(key, StringHelper.ToStringInvariantCulture(value)));
             }
 
             return this;
@@ -392,7 +393,7 @@ namespace FluentUri
         {
             // The parameterized `UriBuilder` constructor throws an exception if its parameter is
             // null or white space, so we need need to check this here.
-            var uriBuilder = string.IsNullOrWhiteSpace(baseUri)
+            var uriBuilder = StringHelper.IsNullOrWhiteSpace(baseUri)
                 ? new UriBuilder()
                 : new UriBuilder(baseUri);
 

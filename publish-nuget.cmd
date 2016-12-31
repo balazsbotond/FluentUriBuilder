@@ -7,6 +7,8 @@ echo Please open FluentUriBuilder.nuspec and update it manually.
 echo(
 pause
 
+"C:\Program Files (x86)\MSBuild\14.0\bin\msbuild.exe" FluentUriBuilder.sln /t:Build /p:Configuration=Release /p:TargetFramework=v2.0
+
 echo Packing FluentUriBuilder v%1...
 nuget pack FluentUriBuilder\FluentUriBuilder.csproj -Prop Configuration=Release
 

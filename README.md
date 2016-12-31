@@ -132,3 +132,7 @@ var uri = FluentUriBuilder.From("http://example.com/somepath?foo=bar#baz")
 
 **This example returns a `System.Uri` instance instead of a string because of the `.ToUri()` call at the end.**
 
+Framework Support
+-----------------
+
+The project currently supports .NET 2.0+. .NET Core support is planned.
