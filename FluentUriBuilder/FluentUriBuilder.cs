@@ -303,7 +303,7 @@ namespace FluentUri
             var valueStr = StringHelper.ToStringInvariantCulture(value);
             Precondition.NotNullOrWhiteSpace(valueStr, nameof(value));
 
-            initializeQueryParamsList();
+            InitializeQueryParamsList();
 
             queryParams.Add(new UriQueryParam(key, valueStr));
 
@@ -326,7 +326,7 @@ namespace FluentUri
         {
             Precondition.NotNull(queryParams, nameof(queryParams));
 
-            initializeQueryParamsList();
+            InitializeQueryParamsList();
 
             foreach (var kvp in queryParams)
             {
@@ -354,7 +354,7 @@ namespace FluentUri
         {
             Precondition.NotNull(queryParams, nameof(queryParams));
 
-            initializeQueryParamsList();
+            InitializeQueryParamsList();
 
             var properties = queryParams.GetType().GetProperties();
 
@@ -441,7 +441,7 @@ namespace FluentUri
             return ToUri().AbsoluteUri;
         }
 
-        private void initializeQueryParamsList()
+        private void InitializeQueryParamsList()
         {
             if (queryParams == null)
             {
